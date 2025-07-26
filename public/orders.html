@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Orders - BazaarLink</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <h1>BazaarLink</h1>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="cart.html">Cart</a></li>
+      <li><a href="orders.html">My Orders</a></li>
+      <li><a href="profile.html">Profile</a></li>
+    </ul>
+  </nav>
+
+  <h2>My Orders</h2>
+  <div id="order-list"></div>
+
+  <script src="products.js"></script>
+  <script>
+    function renderOrders() {
+      const container = document.getElementById("order-list");
+      container.innerHTML = "";
+      if (orders.length === 0) {
+        container.innerHTML = "<p>No orders yet.</p>";
+        return;
+      }
+      orders.forEach(p => {
+        const div = document.createElement("div");
+        div.innerHTML = `<p>${p.name} - ₹${p.price}</p>`;
+        container.appendChild(div);
+      });
+    }
+    renderOrders();
+  </script>
+</body>
+</html>

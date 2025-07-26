@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Your Cart - BazaarLink</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <h1>BazaarLink</h1>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="cart.html">Cart</a></li>
+      <li><a href="orders.html">My Orders</a></li>
+      <li><a href="profile.html">Profile</a></li>
+    </ul>
+  </nav>
+
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <button onclick="checkout()">Checkout</button>
+
+  <script src="products.js"></script>
+  <script>
+    function renderCart() {
+      const container = document.getElementById("cart-items");
+      container.innerHTML = "";
+      if (cart.length === 0) {
+        container.innerHTML = "<p>Your cart is empty.</p>";
+        return;
+      }
+      cart.forEach(p => {
+        const div = document.createElement("div");
+        div.innerHTML = `<p>${p.name} - ₹${p.price}</p>`;
+        container.appendChild(div);
+      });
+    }
+    function checkout() {
+      orders.push(...cart);
+      cart.length = 0;
+      alert("Order placed!");
+      renderCart();
+      updateCartCount();
+    }
+    renderCart();
+  </script>
+</body>
+</html>

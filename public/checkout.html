@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <h1>BazaarLink</h1>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+      <a href="orders.html">My Orders</a>
+      <a href="login.html">Profile</a>
+    </div>
+  </nav>
+
+  <h2>Checkout</h2>
+  <div id="checkout-product"></div>
+
+  <form id="checkout-form">
+    <label>Full Address:</label><br>
+    <textarea id="address" required></textarea><br>
+    <label>Quantity:</label><br>
+    <input type="number" id="quantity" min="1" value="1" required><br>
+    <label>Payment Method:</label><br>
+    <select id="payment">
+      <option>Cash on Delivery</option>
+      <option>UPI</option>
+      <option>Credit Card</option>
+    </select><br><br>
+    <button type="submit">Place Order</button>
+  </form>
+
+  <script src="script.js"></script>
+  <script>
+    const product = JSON.parse(localStorage.getItem("buyNow"));
+    const container = document.getElementById("checkout-product");
+    container.innerHTML = `
+      <h3>${product.name}</h3>
+      <p>Price: ₹${product.price}</p>
+      <img src="${product.image}" style="width:200px;">
+    `;
+
+    document.getElementById("checkout-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      orders.push({
+        product: product.name,
+        price: product.price,
+        address: document.getElementById("address").value,
+        quantity: document.getElementById("quantity").value,
+        payment: document.getElementById("payment").value
+      });
+      localStorage.setItem("orders", JSON.stringify(orders));
+      localStorage.removeItem("buyNow");
+      alert("Order Placed!");
+      window.location.href = "orders.html";
+    });
+  </script>
+</body>
+</html>
