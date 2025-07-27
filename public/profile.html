@@ -15,7 +15,28 @@
     </ul>
   </nav>
 
-  <h2>My Profile</h2>
-  <p>This is a placeholder profile page.</p>
+  <div class="profile-container">
+    <h2>Welcome, <span id="user-name"></span>!</h2>
+    <p><strong>Email:</strong> <span id="user-email"></span></p>
+    <p><strong>Mobile:</strong> <span id="user-mobile"></span></p>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById("user-name").textContent = user.name;
+      document.getElementById("user-email").textContent = user.email;
+      document.getElementById("user-mobile").textContent = user.mobile;
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "login.html";
+    }
+  </script>
 </body>
 </html>

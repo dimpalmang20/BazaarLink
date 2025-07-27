@@ -3,6 +3,62 @@
 <head>
   <title>My Orders - BazaarLink</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2c3e50;
+      color: white;
+      padding: 10px 20px;
+    }
+
+    nav ul {
+      display: flex;
+      list-style-type: none;
+      gap: 20px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .order-item {
+      display: flex;
+      gap: 15px;
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+
+    .order-item img {
+      width: 100px;
+      border-radius: 8px;
+    }
+
+    .order-item h3 {
+      margin: 0;
+    }
+
+    .order-item p {
+      margin: 5px 0;
+    }
+
+    #orders-container {
+      margin-top: 20px;
+    }
+
+    .empty-message {
+      font-size: 18px;
+      color: gray;
+      margin-top: 30px;
+    }
+  </style>
 </head>
 <body>
   <nav>
@@ -16,23 +72,35 @@
   </nav>
 
   <h2>My Orders</h2>
-  <div id="order-list"></div>
+  <div id="orders-container"></div>
 
-  <script src="products.js"></script>
   <script>
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
+
     function renderOrders() {
-      const container = document.getElementById("order-list");
+      const container = document.getElementById("orders-container");
       container.innerHTML = "";
+
       if (orders.length === 0) {
-        container.innerHTML = "<p>No orders yet.</p>";
+        container.innerHTML = "<p class='empty-message'>No orders have been placed yet.</p>";
         return;
       }
-      orders.forEach(p => {
+
+      orders.forEach(order => {
         const div = document.createElement("div");
-        div.innerHTML = `<p>${p.name} - ₹${p.price}</p>`;
+        div.className = "order-item";
+        div.innerHTML = `
+          <img src="${order.image}" alt="${order.name}">
+          <div>
+            <h3>${order.name}</h3>
+            <p>${order.description}</p>
+            <p><strong>Price: ₹${order.price}</strong></p>
+          </div>
+        `;
         container.appendChild(div);
       });
     }
+
     renderOrders();
   </script>
 </body>

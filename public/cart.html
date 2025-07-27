@@ -3,6 +3,25 @@
 <head>
   <title>Your Cart - BazaarLink</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+    .cart-item img {
+      width: 100px;
+      border-radius: 8px;
+    }
+    .cart-item h3 {
+      margin: 0;
+    }
+    .cart-item p {
+      margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
   <nav>
@@ -17,31 +36,90 @@
 
   <h2>Your Cart</h2>
   <div id="cart-items"></div>
+  
+  <div class="checkout-section">
+  <p id="total-price" style="font-size: 18px; margin-bottom: 15px;"></p>
   <button onclick="checkout()">Checkout</button>
+  <button class="clear-btn" onclick="clearCart()">Clear All</button>
+</div>
 
-  <script src="products.js"></script>
+
+  <!-- Ensure this script runs after DOM and loads products.js if needed -->
   <script>
+    // Load cart from localStorage
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+ 
+
     function renderCart() {
-      const container = document.getElementById("cart-items");
-      container.innerHTML = "";
-      if (cart.length === 0) {
-        container.innerHTML = "<p>Your cart is empty.</p>";
-        return;
-      }
-      cart.forEach(p => {
-        const div = document.createElement("div");
-        div.innerHTML = `<p>${p.name} - ₹${p.price}</p>`;
-        container.appendChild(div);
-      });
+  const container = document.getElementById("cart-items");
+  container.innerHTML = "";
+
+  if (cart.length === 0) {
+    container.innerHTML = "<p class='empty-message'>Your cart is empty.</p>";
+    return;
+  }
+
+  cart.forEach((p, index) => {
+    const div = document.createElement("div");
+    div.className = "cart-item";
+    div.innerHTML = `
+      <img src="${p.image}" alt="${p.name}">
+      <div style="flex-grow:1">
+        <h3>${p.name}</h3>
+        <p>${p.description}</p>
+        <p><strong>Price: ₹${p.price}</strong></p>
+      </div>
+      <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
+    `;
+    container.appendChild(div);
+  });
+
+  calculateTotal(); // <-- Call this after displaying all cart items
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1); // Remove the item at that index
+  localStorage.setItem("cart", JSON.stringify(cart)); // Update localStorage
+  renderCart(); // Re-render updated cart
+  updateCartCount(); // Update cart count in nav if needed
+}  
+
+function clearCart() {
+  if (confirm("Are you sure you want to clear the entire cart?")) {
+    cart.length = 0;
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+    updateCartCount();
+  }
+}
+
+function calculateTotal() {
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  const totalElement = document.getElementById("total-price");
+  totalElement.textContent = `Total: ₹${total}`;
+}
+
+
+
+    function updateCartCount() {
+      document.querySelectorAll("#cart-count").forEach(el => el.textContent = cart.length);
     }
+
     function checkout() {
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
       orders.push(...cart);
+      localStorage.setItem("orders", JSON.stringify(orders));
       cart.length = 0;
+      localStorage.setItem("cart", JSON.stringify(cart));
       alert("Order placed!");
       renderCart();
       updateCartCount();
     }
+
+    // Call render after everything is loaded
     renderCart();
+    updateCartCount();
   </script>
 </body>
 </html>
